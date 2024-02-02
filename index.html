@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+     <link rel="stylesheet" href="style.css">
+     <script src="./script.js"></script>
+     <meta charset="UTF-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+     <title>Driver Sign In Sheet</title>
+   </head>
+
+  <body onload="startTime()">
+    <div class="card container">
+      <header>
+        <img src="./images/RPC.jpg" alt="RPC LOGO" class="rpc noprint">
+        <h5>Driver Sign In</h5>
+     </header>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">
+          <form class="needs-validation noprint" id="driverForm">
+            <div>
+              <div id="time">Time</div>
+            </div>
+            <div class="mb-3 ">
+              <label for="drivername">Driver Name</label>
+              <input required class="form-control" type="text" id="driverName">
+              <div class="invalid-feedback">
+                Please provide a valid driver name.
+              </div>
+            </div>
+    
+            <div class="mb-3">
+              <label for="bolnumber">BOL Number</label>
+              <input class="form-control" type="text" id="bolN" minlength="6" maxlength="6" required
+                placeholder="Example: 736957">
+              <div class="invalid-feedback">
+                Please provide a valid BOL Number.
+              </div>
+            </div>
+    
+            <div class="mb-3">
+              <label for="trailernumber">Trailer Number</label>
+              <input required class="form-control" type="text" id="trN">
+              <div class="invalid-feedback">
+                Please provide a Trailer Number or Identification.
+              </div>
+            </div>
+    
+            <div class="mb-3">
+              <label for="phonenumber">Cellphone Number</label>
+              <input required class="form-control" type="tel" id="phoneN"/>
+              <div class="invalid-feedback">
+                Please provide a Cellphone number to contact you.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="carrier">Carrier</label>
+              <input required class="form-control" type="text" id="crr">
+            </div>
+            <div class="mt-3 mb-3">
+              <button type="submit" id="btn" class="pnt noprint btn btn-primary">Submit</button>
+              <div class="dropdown noprint">
+                <button onclick="myFunction()" class="dropbtn btn btn-info ">Help</button>
+                <div id="myDropdown" class="dropdown-content">
+                  <p href="#">Call this number for assitance (323) 228-229.</p>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col">
+          <table class="table" id="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Driver Name</th>
+                <th scope="col">BOL #</th>
+                <th scope="col">Trailer #</th>
+                <th scope="col">Cellphone #</th>
+                <th scope="col">Carrier</th>
+                <th scope="col">Time in</th>
+              </tr>
+            </thead>
+            <tbody> 
+            </tbody>
+          </table>
+        </div>
+      </div>
+     </div>
+    </div>
+
+    <script>
+      let pickups = [];
+      const refreshTable=()=>{
+        const table = document.getElementById("table");
+          const body = table.children[1];
+          body.innerHTML="";
+          console.log('table' , table);
+
+          pickups.forEach((pickup,index) => {
+            const tr = document.createElement('tr');
+
+            const tdNumber = document.createElement('td');
+            tdNumber.innerText= index+1;
+            tr.appendChild(tdNumber)
+
+            const tdDriver = document.createElement('td');
+            tdDriver.innerText= pickup.Driver;
+            tr.appendChild(tdDriver)
+
+            const tdBOL = document.createElement('td');
+            tdBOL.innerText= pickup.BOL;
+            tr.appendChild(tdBOL)
+
+            const tdTrailer = document.createElement('td');
+            tdTrailer.innerText= pickup.Trailer;
+            tr.appendChild(tdTrailer)
+
+            const tdCell = document.createElement('td');
+            tdCell.innerText= pickup.Cell;
+            tr.appendChild(tdCell)
+
+            const tdCarrier = document.createElement('td');
+            tdCarrier.innerText= pickup.Carrier;
+            tr.appendChild(tdCarrier)
+
+            const tdTime = document.createElement('td');
+            tdTime.innerText= pickup.Time;
+            tr.appendChild(tdTime)
+
+            body.appendChild(tr);
+          })
+      }
+      const addPickup = (ev)=>{
+          ev.preventDefault();  //to stop the form submitting
+          const form = document.getElementById('driverForm')
+          form.classList.add('was-validated')
+          // checking if the form is valid
+          // if (form.checkValidity()){
+          // getting the current date time
+          var today = new Date();
+          var h = today.getHours();
+          var m = today.getMinutes();
+          var s = today.getSeconds();
+          var M = today.getMonth()+1;
+          var d = today.getDate();
+          var y = today.getFullYear();
+          // storing the form values in an object
+          let Info = {
+              Time: h + ":" + m + ":" + s + " " + M + "/" + d + "/" + y,
+              Driver: document.getElementById('driverName').value,
+              BOL: document.getElementById('bolN').value,
+              Trailer: document.getElementById('trN').value,
+              Cell: document.getElementById('phoneN').value,
+              Carrier: document.getElementById('crr').value
+          }
+
+          pickups.push(Info);
+          refreshTable()
+          document.forms[0].reset(); // to clear the form for the next entries
+          document.querySelector('form').reset();
+
+          //for display purposes only
+          
+          //saving to localStorage
+          localStorage.setItem('MyPickupsList', JSON.stringify(pickups) );
+        
+      } 
+
+      document.addEventListener('DOMContentLoaded', ()=>{
+        const storedPickups = localStorage.getItem('MyPickupsList');
+        if(storedPickups){
+        const parsedPickups = JSON.parse(storedPickups)
+        pickups=parsedPickups;
+        refreshTable()
+        }
+          document.getElementById('btn').addEventListener('click', addPickup);
+      });
+  </script>
+ </body>
+ 
+   
+</html>
